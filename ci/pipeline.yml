@@ -86,7 +86,7 @@ jobs:
         args:
             - -exc
             - |
-              microdnf install tar gzip wget make findutils
+              microdnf -y install tar gzip wget make findutils
               
               # install newest go version
               export GO_VERSION="1.18"
