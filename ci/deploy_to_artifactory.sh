@@ -16,7 +16,6 @@ mvn deploy:deploy-file \
   -Dpackaging=bin \
   -Dversion=${version}
 
-set +x
 mvn deploy:deploy-file \
   -Durl=https://delivery.instana.io/rel-generic-agent-local  \
   -Dfile=${filename} \
