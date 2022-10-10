@@ -7,14 +7,14 @@ readonly architecture="${2}"
 readonly version="${3}"
 
 mvn deploy:deploy-file \
-	-Durl=https://artifact.instana.io/artifactory/agent-releases  \
-	-Dfile=${filename} \
-	-DrepositoryId=agent-releases \
-	-DgroupId=com.instana \
-	-DartifactId=memory_calculator \
-    -Dclassifier=${architecture}\
-	-Dpackaging=bin \
-	-Dversion=${version}
+  -Durl=https://artifact.instana.io/artifactory/agent-releases  \
+  -Dfile=${filename} \
+  -DrepositoryId=agent-releases \
+  -DgroupId=com.instana \
+  -DartifactId=memory_calculator \
+  -Dclassifier=${architecture} \
+  -Dpackaging=bin \
+  -Dversion=${version}
 
 set +x
 mvn deploy:deploy-file \
@@ -23,7 +23,7 @@ mvn deploy:deploy-file \
   -DrepositoryId=agent-releases \
   -DgroupId=com.instana \
   -DartifactId=memory_calculator \
-  -Dclassifier=${architecture}\
+  -Dclassifier=${architecture} \
   -Dpackaging=bin \
   -Dversion=${version} \
   -Dusername=${DELIVERY_ARTIFACTORY_USERNAME} \
