@@ -13,7 +13,7 @@ var:
         value: stan@instana.com
 
 resources:
-  - name: java-buildpack-memory-calculator
+  - name: java-buildpack-memory-calculator1
     type: git
     icon: github
     source:
@@ -25,6 +25,14 @@ jobs:
     plan:
       - get: java-buildpack-memory-calculator
         trigger: true
+      - task: render-pipeline-template
+        # see notes in the task file about why we need to copy-paste this task.
+        file: java-buildpack-memory-calculator/ci/render-template-task.yml
+        input_mapping:
+          repo: java-buildpack-memory-calculator
+        vars:
+          template: ci/render-template-task.yml  # this path has to be relative to 'repo'
+          branch: ((branch))
       - set_pipeline: self
         file: java-buildpack-memory-calculator/ci/pipeline.yml
         vars:
