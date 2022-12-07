@@ -13,7 +13,7 @@ var:
         value: stan@instana.com
 
 resources:
-  - name: java-buildpack-memory-calculator1
+  - name: java-buildpack-memory-calculator
     type: git
     icon: github
     source:
@@ -34,7 +34,7 @@ jobs:
           template: ci/render-template-task.yml  # this path has to be relative to 'repo'
           branch: ((branch))
       - set_pipeline: self
-        file: java-buildpack-memory-calculator/ci/pipeline.yml
+        file: rendered/pipeline.yml
         vars:
           branch: ((branch))
           project-berlin-gh-token: ((project-berlin-gh-token))
