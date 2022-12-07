@@ -31,7 +31,7 @@ jobs:
         input_mapping:
           repo: java-buildpack-memory-calculator
         vars:
-          template: ci/render-template-task.yml  # this path has to be relative to 'repo'
+          template: ci/pipeline.yml  # this path has to be relative to 'repo'
           branch: ((branch))
       - set_pipeline: self
         file: rendered/pipeline.yml
