@@ -1,4 +1,47 @@
 ---
+aliases:
+  gh-status-hooks-tests: &gh-status-hooks-tests
+    on_success:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: success, context: test-and-build-and-deploy-only-on-main/tests }
+    on_failure:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: failure, context: test-and-build-and-deploy-only-on-main/tests }
+    on_error:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: error, context: test-and-build-and-deploy-only-on-main/tests }
+    on_abort:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: error, context: test-and-build-and-deploy-only-on-main/tests }
+  gh-status-hooks-build: &gh-status-hooks-build
+    on_success:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: success, context: test-and-build-and-deploy-only-on-main/build }
+    on_failure:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: failure, context: test-and-build-and-deploy-only-on-main/build }
+    on_error:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: error, context: test-and-build-and-deploy-only-on-main/build }
+    on_abort:
+      put: gh-status
+      inputs: [ java-buildpack-memory-calculator ]
+      params: { state: error, context: test-and-build-and-deploy-only-on-main/build }
+  gh-status-set-pending-tests: &gh-status-set-pending-tests
+    put: gh-status
+    inputs: [ java-buildpack-memory-calculator ]
+    params: { state: pending, context: test-and-build-and-deploy-only-on-main/tests }
+  gh-status-set-pending-build: &gh-status-set-pending-build
+    put: gh-status
+    inputs: [ java-buildpack-memory-calculator ]
+    params: { state: pending, context: test-and-build-and-deploy-only-on-main/build }
 
 var:
   memory-calculator-repository: &memory-calculator-repository-config
@@ -12,12 +55,32 @@ var:
       - name: user.email
         value: stan@instana.com
 
+resource_types:
+
+  - name: cogito
+    type: registry-image
+    check_every: never
+    source:
+      repository: delivery.instana.io/int-docker-cogito-instana-local/cogito
+      tag: latest
+      username: ((delivery-instana-io-internal-project-artifact-read-writer-creds.username))
+      password: ((delivery-instana-io-internal-project-artifact-read-writer-creds.password))
+
 resources:
   - name: java-buildpack-memory-calculator
     type: git
     icon: github
     source:
       <<: *memory-calculator-repository-config
+
+  - name: gh-status
+    type: cogito
+    source:
+      owner: instana
+      repo: java-buildpack-memory-calculator
+      access_token: ((instanacd-github-api-token))
+      context_prefix: concourse
+      github_host: github.com
 
 jobs:
   - name: self-update
@@ -46,19 +109,24 @@ jobs:
       - get: java-buildpack-memory-calculator
         trigger: true
         passed: [ self-update ]
+      - <<: *gh-status-set-pending-tests
+      - <<: *gh-status-set-pending-build
       - task: tests
+        <<: *gh-status-hooks-tests
         config:
           platform: linux
           image_resource:
             type: registry-image
             source:
               repository: registry.access.redhat.com/ubi8/go-toolset
-              tag: 1.17
+              tag: 1.20.10
           inputs:
             - name: java-buildpack-memory-calculator
           run:
             path: java-buildpack-memory-calculator/ci/unit-test.sh
+
       - task: build
+        <<: *gh-status-hooks-build
         config:
           platform: linux
           image_resource:
@@ -80,8 +148,8 @@ jobs:
                 microdnf -y install tar gzip wget make findutils
                 
                 # install newest go version
-                export GO_VERSION="1.20.11"
-                export GO_SHAR256="ef79a11aa095a08772d2a69e4f152f897c4e96ee297b0dc20264b7dec2961abe go${GO_VERSION}.linux-amd64.tar.gz"
+                export GO_VERSION="1.20.13"
+                export GO_SHAR256="9a9d3dcae2b6a638b1f2e9bd4db08ffb39c10e55d9696914002742d90f0047b5 go${GO_VERSION}.linux-amd64.tar.gz"
                 export GO_BINARY="go${GO_VERSION}.linux-amd64.tar.gz"
                 wget "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
                 echo "${GO_SHAR256}" | sha256sum --check
@@ -92,6 +160,7 @@ jobs:
                 export SOURCE_DIR="$(pwd)/${SOURCE_DIR}"
                 export TARGET_DIR="$(pwd)/${TARGET_DIR}"
                 bash -x ${SOURCE_DIR}/ci/package.sh
+
       - load_var: version
         file: java-buildpack-memory-calculator/VERSION
         reveal: true
