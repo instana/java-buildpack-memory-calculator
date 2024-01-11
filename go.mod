@@ -1,6 +1,6 @@
 module github.com/instana/java-buildpack-memory-calculator/v4
 
-go 1.17
+go 1.20
 
 require (
 	github.com/onsi/gomega v1.18.1
