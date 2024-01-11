@@ -2,51 +2,35 @@
 aliases:
   gh-status-hooks-tests: &gh-status-hooks-tests
     on_success:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: success, context: test-and-build-and-deploy-only-on-main/tests }
     on_failure:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: failure, context: test-and-build-and-deploy-only-on-main/tests }
     on_error:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: error, context: test-and-build-and-deploy-only-on-main/tests }
     on_abort:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: error, context: test-and-build-and-deploy-only-on-main/tests }
   gh-status-hooks-build: &gh-status-hooks-build
     on_success:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: success, context: test-and-build-and-deploy-only-on-main/build }
     on_failure:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: failure, context: test-and-build-and-deploy-only-on-main/build }
     on_error:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: error, context: test-and-build-and-deploy-only-on-main/build }
     on_abort:
-      yx_if:
-        - not_eq: [((branch)), main]
       put: gh-status
       inputs: [ java-buildpack-memory-calculator ]
       params: { state: error, context: test-and-build-and-deploy-only-on-main/build }
@@ -126,11 +110,7 @@ jobs:
         trigger: true
         passed: [ self-update ]
       - <<: *gh-status-set-pending-tests
-        yx_if:
-        - not_eq: [((branch)), main]
       - <<: *gh-status-set-pending-build
-        yx_if:
-        - not_eq: [((branch)), main]
       - task: tests
         <<: *gh-status-hooks-tests
         config:
