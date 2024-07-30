@@ -119,7 +119,7 @@ jobs:
             type: registry-image
             source:
               repository: registry.access.redhat.com/ubi8/go-toolset
-              tag: 1.20.10
+              tag: 1.21.11
           inputs:
             - name: java-buildpack-memory-calculator
           run:
@@ -148,8 +148,8 @@ jobs:
                 microdnf -y install tar gzip wget make findutils
                 
                 # install newest go version
-                export GO_VERSION="1.20.13"
-                export GO_SHAR256="9a9d3dcae2b6a638b1f2e9bd4db08ffb39c10e55d9696914002742d90f0047b5 go${GO_VERSION}.linux-amd64.tar.gz"
+                export GO_VERSION="1.21.12"
+                export GO_SHAR256="121ab58632787e18ae0caa8ae285b581f9470d0f6b3defde9e1600e211f583c5 go${GO_VERSION}.linux-amd64.tar.gz"
                 export GO_BINARY="go${GO_VERSION}.linux-amd64.tar.gz"
                 wget "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
                 echo "${GO_SHAR256}" | sha256sum --check
