@@ -149,7 +149,7 @@ jobs:
                 
                 # install newest go version
                 export GO_VERSION="1.23.1"
-                export GO_SHAR256="cdee2f4e2efa001f7ee75c90f2efc310b63346cfbba7b549987e9139527c6b17 go${GO_VERSION}.linux-amd64.tar.gz"
+                export GO_SHAR256="49bbb517cfa9eee677e1e7897f7cf9cfdbcf49e05f61984a2789136de359f9bd go${GO_VERSION}.linux-amd64.tar.gz"
                 export GO_BINARY="go${GO_VERSION}.linux-amd64.tar.gz"
                 wget "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
                 echo "${GO_SHAR256}" | sha256sum --check
