@@ -148,8 +148,8 @@ jobs:
                 microdnf -y install tar gzip wget make findutils
                 
                 # install newest go version
-                export GO_VERSION="1.23.1"
-                export GO_SHAR256="49bbb517cfa9eee677e1e7897f7cf9cfdbcf49e05f61984a2789136de359f9bd go${GO_VERSION}.linux-amd64.tar.gz"
+                export GO_VERSION="1.23.5"
+                export GO_SHAR256="cbcad4a6482107c7c7926df1608106c189417163428200ce357695cc7e01d091 go${GO_VERSION}.linux-amd64.tar.gz"
                 export GO_BINARY="go${GO_VERSION}.linux-amd64.tar.gz"
                 wget "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
                 echo "${GO_SHAR256}" | sha256sum --check
